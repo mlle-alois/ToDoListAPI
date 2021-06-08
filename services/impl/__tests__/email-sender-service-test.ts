@@ -1,4 +1,3 @@
-import {EmailSenderServiceImpl} from "../email-sender-service-impl";
 import {EmailSenderServiceMock} from "../email-sender-service-mock";
 import {EmailSenderService} from "../../email-sender-service";
 
