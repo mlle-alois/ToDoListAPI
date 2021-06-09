@@ -4,10 +4,11 @@ import express, {Express} from "express";
 import {buildRoutes} from "./router";
 import bodyParser from "body-parser";
 
-
 const app: Express = express();
+const cors = require('cors');
 
-app.use(bodyParser.json);
+app.use(cors());
+app.use(bodyParser.json());
 
 buildRoutes(app);
 
