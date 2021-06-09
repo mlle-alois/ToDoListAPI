@@ -18,15 +18,6 @@ toDoListRouter.put("/updateToDoListByEmail/:email", async function (req, res){
 });
 
 /**
- * /toDoList/
- */
-toDoListRouter.get("/", async function (req, res) {
-    const connection = await DatabaseUtils.getConnection();
-    console.log(connection)
-    res.json("")
-});
-
-/**
  * /toDoList/timeIsOverForTodoList/:id
  */
 toDoListRouter.get("/timeIsOverForTodoList/:id", async function (req, res) {
