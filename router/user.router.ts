@@ -29,9 +29,9 @@ userRouter.post("/", async function (req, res) {
 
   if (user !== null) {
     res.status(201);
-    res.send(JSON.stringify(user)).end();
+    res.json(user);
   } else {
-    res.status(409).end();
+    res.status(500).end("La création n'a pas pu aboutir");
   }
 });
 
@@ -45,7 +45,7 @@ userRouter.get("/isValid/:id", async function (req, res) {
     res.status(200);
     res.json(isValid).end();
   } else {
-    res.status(409).end("L'utilisateur renseigné est inconnu.");
+    res.status(400).end("L'utilisateur renseigné est inconnu.");
   }
 });
 
