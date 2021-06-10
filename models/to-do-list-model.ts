@@ -5,7 +5,7 @@ interface ToDoListModelProps {
     name?: string;
     description?: string;
     utilisateur: number;
-    list: ItemModel[];
+    list?: ItemModel[];
 }
 
 export class ToDoListModel implements ToDoListModelProps {
@@ -13,7 +13,7 @@ export class ToDoListModel implements ToDoListModelProps {
     name?: string;
     description?: string;
     utilisateur: number;
-    list: ItemModel[];
+    list?: ItemModel[];
 
     constructor(properties: ToDoListModelProps) {
         this.list = [];
