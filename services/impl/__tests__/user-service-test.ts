@@ -17,25 +17,24 @@ describe('User test', () => {
         let validBirthDate13yo = new Date();
         validBirthDate13yo.setFullYear(validBirthDate13yo.getFullYear()-13);
 
-        let emptyToDoList = new ToDoListModel();
-
         const userService = new UserServiceImpl();
 
         let user = new UserModel({
+            id:0,
             email:"gerard@gmail.com",
             firstname:"Gerard",
             name:"Pion",
             password:"motdepasse",
             birthdate:validBirthDate,
-            toDoList: emptyToDoList
         });
+        
         beforeEach(() => {
+           user.id = 0;
            user.email = "gerard@gmail.com";
            user.firstname = "Gerard";
            user.name = "Pion";
            user.password = "motdepasse";
            user.birthdate = validBirthDate;
-           user.toDoList = emptyToDoList;
         });
 
         it('Should return true Given valid user',() =>{

@@ -1,7 +1,7 @@
 import {userService} from "../user-service";
 import moment from "moment";
 import {UserModel} from "../../models";
-import { Connection } from "mysql2/promise";
+import {Connection} from "mysql2/promise";
 import { UserController } from "../../controllers/user.controller";
 
 export class UserServiceImpl implements userService{
