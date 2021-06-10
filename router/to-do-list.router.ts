@@ -39,7 +39,7 @@ toDoListRouter.post("/addItemByToDoListId/:id", async function (req, res) {
 /**
  * /toDoList/updateToDoListById/:id
  */
-toDoListRouter.put("/updateToDoListByEmail/:id", async function (req, res) {
+toDoListRouter.put("/updateToDoListById/:id", async function (req, res) {
     const id = req.params.id;
     const name = req.body.name;
     const description = req.body.description;
@@ -79,10 +79,7 @@ toDoListRouter.get("/timeIsOverForTodoList/:id", async function (req, res) {
 
     const waitingTimeIsOver = await toDoListService.waitingTimeIsOver(Number.parseInt(id));
 
-    if (waitingTimeIsOver)
-        res.status(204).end();
-    else
-        res.status(404).end();
+    res.status(201).end(waitingTimeIsOver + "");
 });
 
 /**
@@ -100,10 +97,7 @@ toDoListRouter.get("/nameAlreadyExistInToDoList/:id", async function (req, res) 
 
     const nameAlreadyExist = await toDoListService.nameAlreadyExist(name, Number.parseInt(id));
 
-    if (nameAlreadyExist)
-        res.status(204).end();
-    else
-        res.status(404).end();
+    res.status(201).end(nameAlreadyExist + "");
 });
 
 export {
