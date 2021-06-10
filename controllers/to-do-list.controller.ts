@@ -34,6 +34,55 @@ export class ToDoListController {
         return null;
     }
 
+    async getToDoListByMaxId(): Promise<ToDoListModel | null> {
+        const res = await this.connection.query(`SELECT id,
+                                                        name,
+                                                        description,
+                                                        utilisateur
+                                                 FROM TODOLIST
+                                                 where id = MAX(id)`);
+        const data = res[0];
+        if (Array.isArray(data)) {
+            const rows = data as RowDataPacket[];
+            if (rows.length > 0) {
+                const row = rows[0];
+                return new ToDoListModel({
+                    id: row["id"],
+                    name: row["name"],
+                    description: row["description"],
+                    utilisateur: row["utilisateur"]
+                });
+            }
+        }
+        return null;
+    }
+
+    async getItemByMaxId(): Promise<ItemModel | null> {
+        const res = await this.connection.query(`SELECT id,
+                                                        name,
+                                                        content,
+                                                        dateHourAdd,
+                                                        todolist
+                                                 FROM ITEM
+                                                 where id = (select MAX(id)
+                                                             FROM ITEM)`);
+        const data = res[0];
+        if (Array.isArray(data)) {
+            const rows = data as RowDataPacket[];
+            if (rows.length > 0) {
+                const row = rows[0];
+                return new ItemModel({
+                    id: row["id"],
+                    name: row["name"],
+                    content: row["content"],
+                    dateHourAdd: row["dateHourAdd"],
+                    toDoList: row["todolist"]
+                });
+            }
+        }
+        return null;
+    }
+
     async getToDoListItemsById(toDoListId: number): Promise<ItemModel[] | null> {
         const res = await this.connection.query(`SELECT I.id,
                                                         I.name,
@@ -70,13 +119,13 @@ export class ToDoListController {
             await this.connection.execute(`INSERT INTO TODOLIST (name,
                                                                  description,
                                                                  utilisateur)
-                                           VALUES (?, ?, ?, ?)`, [
+                                           VALUES (?, ?, ?)`, [
                 options.name,
                 options.description,
                 options.utilisateur
             ]);
 
-            return await this.getToDoListById(options.id);
+            return await this.getToDoListByMaxId();
         } catch (err) {
             return null;
         }
@@ -88,13 +137,13 @@ export class ToDoListController {
                                                              content,
                                                              dateHourAdd,
                                                              todolist)
-                                           VALUES (?, ?, ?, ?, ?)`, [
+                                           VALUES (?, ?, ?, ?)`, [
                 options.name,
                 options.content,
                 options.dateHourAdd,
                 options.toDoList
             ]);
-            return options;
+            return await this.getItemByMaxId();
         } catch (err) {
             return null;
         }
@@ -104,8 +153,7 @@ export class ToDoListController {
         try {
             await this.connection.execute(`INSERT INTO TODOLIST_CONTAINS_ITEM (todolist_id, item_id)
                                            VALUES (?, ?)`, [
-                itemId,
-                toDoListId
+                toDoListId, itemId
             ]);
             return true;
         } catch (err) {

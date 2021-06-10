@@ -29,15 +29,6 @@ export class ToDoListServiceImpl implements ToDoListService {
         return this.toDoListController.createToDoList(options);
     }
 
-    async createItem(options: ItemModel): Promise<ItemModel | null> {
-        const toDoList = await this.toDoListController.getToDoListById(options.toDoList);
-        if (toDoList === null) {
-            return null;
-        }
-
-        return this.toDoListController.createItem(options);
-    }
-
     async updateToDoList(options: ToDoListModel): Promise<ToDoListModel | null> {
         //TODO activer avec le service de halisia
         /*const user = await this.userService.getUserById(options.utilisateur);
@@ -46,27 +37,27 @@ export class ToDoListServiceImpl implements ToDoListService {
         return await this.toDoListController.updateToDoList(options);
     }
 
-    async add(item: ItemModel, toDoListId: number): Promise<boolean> {
-        const toDoList = await this.toDoListController.getToDoListById(toDoListId);
+    async add(item: ItemModel): Promise<boolean> {
+        const toDoList = await this.toDoListController.getToDoListById(item.toDoList);
         if (toDoList === null) {
             return false;
         }
-        const list = await this.toDoListController.getToDoListItemsById(toDoList.id);
+        const list = await this.toDoListController.getToDoListItemsById(item.toDoList);
         if (list === null)
             toDoList.list = [];
         else
             toDoList.list = list;
-        if (toDoList.list.length >= 10 || !await this.waitingTimeIsOver(toDoList.id) ||
-            (item.name === "" || item.content === "") || await this.nameAlreadyExist(item.name, toDoList.id) ||
-            item.content.length > 1000)
+        if (toDoList.list.length >= 10 || !(await this.waitingTimeIsOver(item.toDoList)) ||
+            (item.name === "" || item.content === "") || await this.nameAlreadyExist(item.name, item.toDoList) ||
+            item.content.length > 1000) {
             return false;
+        }
 
-        item.dateHourAdd = new Date();
         const resultCreateItem = await this.toDoListController.createItem(item);
         if (resultCreateItem === null) {
             return false;
         }
-        const resultAddItem = await this.toDoListController.addItemToToDoList(item.id, toDoList.id);
+        const resultAddItem = await this.toDoListController.addItemToToDoList(resultCreateItem.id, item.toDoList);
         if (!resultAddItem) {
             return false;
         }
@@ -83,7 +74,7 @@ export class ToDoListServiceImpl implements ToDoListService {
         if (toDoList === null) {
             return false;
         }
-        const list = await this.toDoListController.getToDoListItemsById(toDoList.id);
+        const list = await this.toDoListController.getToDoListItemsById(toDoListId);
         if (list === null)
             toDoList.list = [];
         else
@@ -96,7 +87,7 @@ export class ToDoListServiceImpl implements ToDoListService {
         if (toDoList === null) {
             return false;
         }
-        const list = await this.toDoListController.getToDoListItemsById(toDoList.id);
+        const list = await this.toDoListController.getToDoListItemsById(toDoListId);
         if (list === null)
             toDoList.list = [];
         else

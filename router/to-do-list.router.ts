@@ -13,27 +13,26 @@ toDoListRouter.post("/addItemByToDoListId/:id", async function (req, res) {
 
     const name = req.body.name;
     const content = req.body.content;
-    const dateHourAdd = req.body.dateHourAdd;
     const todolist = req.body.todolist;
 
-    if (name === undefined || content === undefined || dateHourAdd === undefined || todolist === undefined) {
+    if (name === undefined || content === undefined || todolist === undefined) {
         res.status(400).end("Veuillez renseigner les informations nécessaires");
         return;
     }
 
-    const toDoList = await toDoListService.createItem({
+    const success = await toDoListService.add({
         id: 0,
         name: name,
         content: content,
-        dateHourAdd: dateHourAdd,
+        dateHourAdd: new Date(),
         toDoList: todolist
     });
+    console.log(success)
 
-    if (toDoList === null) {
+    if (!success) {
         res.status(500).end("La création n'a pas pu aboutir, veillez à renseigner des informations valides");
     } else {
-        res.status(201);
-        res.json(toDoList);
+        res.status(201).end();
     }
 });
 
