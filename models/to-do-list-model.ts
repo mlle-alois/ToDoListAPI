@@ -1,27 +1,26 @@
 import {ItemModel} from "./item-model";
 
 interface ToDoListModelProps {
-    name: string;
-    description: string;
+    id: number;
+    name?: string;
+    description?: string;
+    utilisateur: number;
     list: ItemModel[];
 }
 
 export class ToDoListModel implements ToDoListModelProps {
-    private _name: string;
-    private _description: string;
+    id: number;
+    name?: string;
+    description?: string;
+    utilisateur: number;
     list: ItemModel[];
 
-    constructor() {
+    constructor(properties: ToDoListModelProps) {
         this.list = [];
-        this._name = "";
-        this._description = "";
-    }
-
-    set description(value: string) {
-        this._description = value;
-    }
-    set name(value: string) {
-        this._name = value;
+        this.id = properties.id;
+        this.name = properties.name;
+        this.description = properties.description;
+        this.utilisateur = properties.utilisateur;
     }
 
 }
