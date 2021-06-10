@@ -1,4 +1,4 @@
-import {ToDoListModel} from "../models";
+import {ItemModel, ToDoListModel} from "../models";
 import {Connection, ResultSetHeader, RowDataPacket} from "mysql2/promise";
 
 export class ToDoListController {
@@ -34,6 +34,37 @@ export class ToDoListController {
         return null;
     }
 
+    async getToDoListItemsById(toDoListId: number): Promise<ItemModel[] | null> {
+        const res = await this.connection.query(`SELECT I.id,
+                                                        I.name,
+                                                        I.content,
+                                                        I.dateHourAdd,
+                                                        I.todolist
+                                                 FROM TODOLIST T
+                                                          JOIN TODOLIST_CONTAINS_ITEM TCI ON T.id = TCI.todolist_id
+                                                          JOIN ITEM I ON I.id = TCI.item_id
+                                                 where T.id = ?`, [
+            toDoListId
+        ]);
+        const data = res[0];
+        if (Array.isArray(data)) {
+            const rows = data as RowDataPacket[];
+            if (rows.length > 0) {
+                const row = rows[0];
+                return (data as RowDataPacket[]).map(function (row: any) {
+                    return new ItemModel({
+                        id: row["id"],
+                        name: row["name"],
+                        content: row["content"],
+                        dateHourAdd: row["dateHourAdd"],
+                        toDoList: row["todolist"]
+                    });
+                });
+            }
+        }
+        return null;
+    }
+
     async createToDoList(options: ToDoListModel): Promise<ToDoListModel | null> {
         try {
             await this.connection.execute(`INSERT INTO TODOLIST (id,
@@ -50,6 +81,39 @@ export class ToDoListController {
             return await this.getToDoListById(options.id);
         } catch (err) {
             return null;
+        }
+    }
+
+    async createItem(options: ItemModel): Promise<ItemModel | null> {
+        try {
+            await this.connection.execute(`INSERT INTO ITEM (id,
+                                                             name,
+                                                             content,
+                                                             dateHourAdd,
+                                                             todolist)
+                                           VALUES (?, ?, ?, ?, ?)`, [
+                options.id,
+                options.name,
+                options.content,
+                options.dateHourAdd,
+                options.toDoList
+            ]);
+            return options;
+        } catch (err) {
+            return null;
+        }
+    }
+
+    async addItemToToDoList(itemId: number, toDoListId: number): Promise<boolean> {
+        try {
+            await this.connection.execute(`INSERT INTO TODOLIST_CONTAINS_ITEM (todolist_id, item_id)
+                                           VALUES (?, ?)`, [
+                itemId,
+                toDoListId
+            ]);
+            return true;
+        } catch (err) {
+            return false;
         }
     }
 

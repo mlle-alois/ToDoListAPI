@@ -1,9 +1,9 @@
 import {ItemModel, ToDoListModel} from "../models";
 
 export interface ToDoListService {
-    add(item: ItemModel, toDoList: ToDoListModel): boolean;
+    add(item: ItemModel, toDoListId: number): Promise<boolean>;
 
-    waitingTimeIsOver(toDoList: ToDoListModel): boolean;
+    waitingTimeIsOver(toDoListId: number): Promise<boolean>;
 
-    nameAlreadyExist(item: ItemModel, toDoList: ToDoListModel): boolean;
+    nameAlreadyExist(item: ItemModel, toDoListId: number): Promise<boolean>;
 }
