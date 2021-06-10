@@ -67,12 +67,10 @@ export class ToDoListController {
 
     async createToDoList(options: ToDoListModel): Promise<ToDoListModel | null> {
         try {
-            await this.connection.execute(`INSERT INTO TODOLIST (id,
-                                                                 name,
+            await this.connection.execute(`INSERT INTO TODOLIST (name,
                                                                  description,
                                                                  utilisateur)
                                            VALUES (?, ?, ?, ?)`, [
-                options.id,
                 options.name,
                 options.description,
                 options.utilisateur
@@ -86,13 +84,11 @@ export class ToDoListController {
 
     async createItem(options: ItemModel): Promise<ItemModel | null> {
         try {
-            await this.connection.execute(`INSERT INTO ITEM (id,
-                                                             name,
+            await this.connection.execute(`INSERT INTO ITEM (name,
                                                              content,
                                                              dateHourAdd,
                                                              todolist)
                                            VALUES (?, ?, ?, ?, ?)`, [
-                options.id,
                 options.name,
                 options.content,
                 options.dateHourAdd,

@@ -1,6 +1,6 @@
 import {userService} from "../user-service";
-import moment from "moment";
 import {UserModel} from "../../models";
+import moment from "moment";
 
 export class UserServiceImpl implements userService{
     isValid(user:UserModel): boolean {
