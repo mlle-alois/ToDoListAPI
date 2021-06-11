@@ -182,7 +182,7 @@ export class ToDoListController {
             const res = await this.connection.execute(`UPDATE todolist SET ${setClause.join(", ")} WHERE id = ?`, params);
             const headers = res[0] as ResultSetHeader;
             if (headers.affectedRows > 0) {
-                return this.getToDoListById(options.id);
+                return await this.getToDoListById(options.id);
             }
             return null;
         } catch (err) {
