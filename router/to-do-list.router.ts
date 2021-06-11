@@ -13,7 +13,7 @@ toDoListRouter.post("/addItemByToDoListId/:id", async function (req, res) {
 
     const name = req.body.name;
     const content = req.body.content;
-    const todolist = req.body.todolist;
+    const todolist = parseInt(req.params.id);
 
     if (name === undefined || content === undefined || todolist === undefined) {
         res.status(400).end("Veuillez renseigner les informations nécessaires");
@@ -45,7 +45,7 @@ toDoListRouter.put("/updateToDoListById/:id", async function (req, res) {
     const description = req.body.description;
     const utilisateur = req.body.utilisateur;
 
-    if (id === undefined || (name === undefined && description === undefined && utilisateur === undefined)) {
+    if (id === undefined || (name === undefined && description === undefined && utilisateur === undefined)|| (utilisateur === undefined)) {
         res.status(400).end("Veuillez renseigner les informations nécessaires");
         return;
     }
@@ -82,7 +82,7 @@ toDoListRouter.get("/timeIsOverForTodoList/:id", async function (req, res) {
     if(waitingTimeIsOver !== null)
         res.status(201).end(waitingTimeIsOver + "");
     else
-        res.status(401);
+        res.status(404).end();
 });
 
 /**
