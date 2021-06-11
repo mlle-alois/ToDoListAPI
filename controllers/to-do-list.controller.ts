@@ -14,7 +14,7 @@ export class ToDoListController {
                                                         name,
                                                         description,
                                                         utilisateur
-                                                 FROM TODOLIST
+                                                 FROM todolist
                                                  where id = ?`, [
             toDoListId
         ]);
@@ -39,7 +39,7 @@ export class ToDoListController {
                                                         name,
                                                         description,
                                                         utilisateur
-                                                 FROM TODOLIST
+                                                 FROM todolist
                                                  where id = MAX(id)`);
         const data = res[0];
         if (Array.isArray(data)) {
@@ -63,9 +63,9 @@ export class ToDoListController {
                                                         content,
                                                         dateHourAdd,
                                                         todolist
-                                                 FROM ITEM
+                                                 FROM item
                                                  where id = (select MAX(id)
-                                                             FROM ITEM)`);
+                                                             FROM item)`);
         const data = res[0];
         if (Array.isArray(data)) {
             const rows = data as RowDataPacket[];
@@ -89,9 +89,9 @@ export class ToDoListController {
                                                         I.content,
                                                         I.dateHourAdd,
                                                         I.todolist
-                                                 FROM TODOLIST T
-                                                          JOIN TODOLIST_CONTAINS_ITEM TCI ON T.id = TCI.todolist_id
-                                                          JOIN ITEM I ON I.id = TCI.item_id
+                                                 FROM todolist T
+                                                          JOIN todolist_contains_item TCI ON T.id = TCI.todolist_id
+                                                          JOIN item I ON I.id = TCI.item_id
                                                  where T.id = ?`, [
             toDoListId
         ]);
@@ -116,7 +116,7 @@ export class ToDoListController {
 
     async createToDoList(options: ToDoListModel): Promise<ToDoListModel | null> {
         try {
-            await this.connection.execute(`INSERT INTO TODOLIST (name,
+            await this.connection.execute(`INSERT INTO todolist (name,
                                                                  description,
                                                                  utilisateur)
                                            VALUES (?, ?, ?)`, [
@@ -133,7 +133,7 @@ export class ToDoListController {
 
     async createItem(options: ItemModel): Promise<ItemModel | null> {
         try {
-            await this.connection.execute(`INSERT INTO ITEM (name,
+            await this.connection.execute(`INSERT INTO item (name,
                                                              content,
                                                              dateHourAdd,
                                                              todolist)
@@ -151,7 +151,7 @@ export class ToDoListController {
 
     async addItemToToDoList(itemId: number, toDoListId: number): Promise<boolean> {
         try {
-            await this.connection.execute(`INSERT INTO TODOLIST_CONTAINS_ITEM (todolist_id, item_id)
+            await this.connection.execute(`INSERT INTO todolist_contains_item (todolist_id, item_id)
                                            VALUES (?, ?)`, [
                 toDoListId, itemId
             ]);
@@ -179,7 +179,7 @@ export class ToDoListController {
         }
         params.push(options.id);
         try {
-            const res = await this.connection.execute(`UPDATE TODOLIST SET ${setClause.join(", ")} WHERE id = ?`, params);
+            const res = await this.connection.execute(`UPDATE todolist SET ${setClause.join(", ")} WHERE id = ?`, params);
             const headers = res[0] as ResultSetHeader;
             if (headers.affectedRows > 0) {
                 return this.getToDoListById(options.id);
@@ -192,7 +192,7 @@ export class ToDoListController {
 
     /*async registerToDoList(toDoListId: number, userMail: string): Promise<UserModel[] | LogError> {
         try {
-            await this.connection.execute(`INSERT INTO RESERVE_USER_TODOLIST (user_id, toDoList_id)
+            await this.connection.execute(`INSERT INTO RESERVE_USER_todolist (user_id, toDoList_id)
                                            VALUES (?, ?)`, [
                 userMail, toDoListId
             ]);
@@ -207,7 +207,7 @@ export class ToDoListController {
     async unregisterToDoList(toDoListId: number, userMail: string): Promise<UserModel[] | LogError> {
         try {
             await this.connection.execute(`DELETE
-                                           FROM RESERVE_USER_TODOLIST
+                                           FROM RESERVE_USER_todolist
                                            WHERE user_id = ?
                                              AND toDoList_id = ?`, [
                 userMail, toDoListId
@@ -221,7 +221,7 @@ export class ToDoListController {
     }
 
     async getToDoListsByEvent(eventId: number): Promise<ToDoListModel[]> {
-        const res = await this.connection.query(`SELECT TODOLIST.toDoList_id,
+        const res = await this.connection.query(`SELECT todolist.toDoList_id,
                                                         toDoList_departure_street,
                                                         toDoList_departure_zipcode,
                                                         toDoList_departure_city,
@@ -233,11 +233,11 @@ export class ToDoListController {
                                                         user_name,
                                                         user_firstname,
                                                         user_phone_number
-                                                 FROM TODOLIST
-                                                          JOIN USER ON USER.user_mail = TODOLIST.conductor_id
-                                                          LEFT JOIN RESERVE_USER_TODOLIST RUC ON RUC.toDoList_id = TODOLIST.toDoList_id
-                                                 WHERE TODOLIST.event_id = ?
-                                                 GROUP BY TODOLIST.toDoList_id`, [
+                                                 FROM todolist
+                                                          JOIN USER ON USER.user_mail = todolist.conductor_id
+                                                          LEFT JOIN RESERVE_USER_todolist RUC ON RUC.toDoList_id = todolist.toDoList_id
+                                                 WHERE todolist.event_id = ?
+                                                 GROUP BY todolist.toDoList_id`, [
             eventId
         ]);
         const data = res[0];
@@ -274,7 +274,7 @@ export class ToDoListController {
                                                         profile_picture_id,
                                                         user_type_id
                                                  FROM USER
-                                                          JOIN RESERVE_USER_TODOLIST RUC ON RUC.user_id = USER.user_mail
+                                                          JOIN RESERVE_USER_todolist RUC ON RUC.user_id = USER.user_mail
                                                  WHERE toDoList_id = ?`, [
             toDoListId
         ]);

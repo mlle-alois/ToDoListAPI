@@ -1,70 +1,62 @@
 import {ItemModel, ToDoListModel} from "../../../models";
 import {ToDoListServiceImpl} from "../to-do-list-service-impl";
+import {DatabaseUtils} from "../../../database/database-tests";
 
 describe('ToDoListService test', () => {
-    const toDoListService = new ToDoListServiceImpl();
     describe('Test add function', () => {
-        it('Should return false with full list', () => {
-            const todoList = new ToDoListModel();
+        it('Should return false with full list', async () => {
+            const connection = await DatabaseUtils.getConnection();
+            const toDoListService = new ToDoListServiceImpl(connection);
             const item = new ItemModel({
+                id: 0,
                 name: "Devoirs",
-                content: ""
+                content: "yop",
+                dateHourAdd: new Date(),
+                toDoList: 1
             });
-            for (let i = 0; i < 10; i += 1) {
-                todoList.list.push({
-                    name: "Item 1",
-                    content: "Tu dois faire ça",
-                    dateHourAdd: new Date(2000, 8, 14)
-                });
-            }
-            expect(toDoListService.add(item, todoList)).toEqual(false);
+            expect(await toDoListService.add(item)).toEqual(false);
         });
-        it('Should return false when not wait enough', () => {
-            const todoList = new ToDoListModel();
+        it('Should return false with name already exist', async () => {
+            const connection = await DatabaseUtils.getConnection();
+            const toDoListService = new ToDoListServiceImpl(connection);
             const item = new ItemModel({
+                id: 0,
                 name: "Devoirs",
-                content: ""
+                content: "yop",
+                dateHourAdd: new Date(),
+                toDoList: 2
             });
-            todoList.list.push({
-                name: "Item 1",
-                content: "Tu dois faire ça",
-                dateHourAdd: new Date()
-            });
-            expect(toDoListService.add(item, todoList)).toEqual(false);
+            expect(await toDoListService.add(item)).toEqual(false);
         });
-        it('Should return false with name already exist', () => {
-            const todoList = new ToDoListModel();
+        it('Should return false with name is empty', async () => {
+            const connection = await DatabaseUtils.getConnection();
+            const toDoListService = new ToDoListServiceImpl(connection);
             const item = new ItemModel({
-                name: "Item 1",
-                content: "Tu dois faire ça"
-            });
-            todoList.list.push({
-                name: "Item 1",
-                content: "Tu dois faire ça",
-                dateHourAdd: new Date(2000, 8, 14)
-            });
-            expect(toDoListService.add(item, todoList)).toEqual(false);
-        });
-        it('Should return false with name is empty', () => {
-            const todoList = new ToDoListModel();
-            const item = new ItemModel({
+                id: 0,
                 name: "",
-                content: "Tu dois faire ça"
+                content: "Tu dois faire ça",
+                dateHourAdd: new Date(),
+                toDoList: 2
             });
-            expect(toDoListService.add(item, todoList)).toEqual(false);
+            expect(await toDoListService.add(item)).toEqual(false);
         });
-        it('Should return false with content is empty', () => {
-            const todoList = new ToDoListModel();
+        it('Should return false with content is empty', async () => {
+            const connection = await DatabaseUtils.getConnection();
+            const toDoListService = new ToDoListServiceImpl(connection);
             const item = new ItemModel({
-                name: "Item 1",
-                content: ""
+                id: 0,
+                name: "Devoirs",
+                content: "",
+                dateHourAdd: new Date(),
+                toDoList: 2
             });
-            expect(toDoListService.add(item, todoList)).toEqual(false);
+            expect(await toDoListService.add(item)).toEqual(false);
         });
-        it('Should return false with length content over 1000', () => {
-
-            const todoList = new ToDoListModel();
+        it('Should return false with length content over 1000', async () => {
+            const connection = await DatabaseUtils.getConnection();
+            const toDoListService = new ToDoListServiceImpl(connection);
             const item = new ItemModel({
+                id: 0,
                 name: "Devoirs",
                 content: "Re ea studio et ea magister amplam latius studio amplius copiis et eximendam Caesarem comes " +
                     "amplam fama longius iussus periculo ut properabat oportunam avia ingenti eximendam longius Gallum et " +
@@ -76,44 +68,21 @@ describe('ToDoListService test', () => {
                     "ea undique equitum Gallum.dius latrones contractis montium amplius re properabat longius ut ea orientis " +
                     "studio fama ut militaribus amplius latius gesta petiere abscessere magister missaeque missaeque petiere " +
                     "fama amplam re equitum amplam missaeque ut dispersique relationes iussus copiis Gallum amplam contractis " +
-                    "comes montium ad"
+                    "comes montium ad",
+                dateHourAdd: new Date(),
+                toDoList: 2
             });
-            todoList.list.push({
-                name: "Item 1",
-                content: "Tu dois faire ça",
-                dateHourAdd: new Date(2000, 8, 14)
-            });
-            expect(toDoListService.add(item, todoList)).toEqual(false);
-        });
-        it('Should return true with empty list', () => {
-            const todoList = new ToDoListModel();
-            const item = new ItemModel({
-                name: "Devoirs",
-                content: ""
-            });
-            expect(toDoListService.add(item, todoList)).toEqual(false);
-        });
-        it('Should return true with not empty list', () => {
-            const todoList = new ToDoListModel();
-            const item = new ItemModel({
-                name: "Devoirs",
-                content: ""
-            });
-            todoList.list.push({
-                name: "Item 1",
-                content: "Tu dois faire ça",
-                dateHourAdd: new Date(2000, 8, 14)
-            });
-            expect(toDoListService.add(item, todoList)).toEqual(false);
+            expect(await toDoListService.add(item)).toEqual(false);
         });
     });
 
     describe('Test waitingTimeIsOver function', () => {
-        it('Should return true with empty list', () => {
-            const todoList = new ToDoListModel();
-            expect(toDoListService.waitingTimeIsOver(todoList)).toEqual(true);
+        it('Should return true with empty list', async () => {
+            const connection = await DatabaseUtils.getConnection();
+            const toDoListService = new ToDoListServiceImpl(connection);
+            expect(await toDoListService.waitingTimeIsOver(3)).toEqual(true);
         });
-        it('Should return true with not empty list but wait enough', () => {
+        /*it('Should return true with not empty list but wait enough', () => {
             const todoList = new ToDoListModel();
             todoList.list.push({
                 name: "Item 1",
@@ -122,7 +91,7 @@ describe('ToDoListService test', () => {
             });
             expect(toDoListService.waitingTimeIsOver(todoList)).toEqual(true);
         });
-        it('Should return false with not empty list but not wait enough', () => {
+        it('Should return false with not empty list but not wait enough', async () => {
             const todoList = new ToDoListModel();
             todoList.list.push({
                 name: "Item 1",
@@ -130,43 +99,45 @@ describe('ToDoListService test', () => {
                 dateHourAdd: new Date()
             });
             expect(toDoListService.waitingTimeIsOver(todoList)).toEqual(false);
-        });
+        });*/
     });
 
     describe('Test nameAlreadyExist function', () => {
-        it('Should return false with empty list', () => {
-            const todoList = new ToDoListModel();
+        it('Should return false with empty list', async () => {
+            const connection = await DatabaseUtils.getConnection();
+            const toDoListService = new ToDoListServiceImpl(connection);
             const item = new ItemModel({
-                name: "Item 1",
-                content: "Tu dois faire ça"
+                id: 0,
+                name: "Devoirs",
+                content: "yop",
+                dateHourAdd: new Date(),
+                toDoList: 3
             });
-            expect(toDoListService.nameAlreadyExist(item, todoList)).toEqual(false);
+            expect(await toDoListService.nameAlreadyExist(item.name, item.toDoList)).toEqual(false);
         });
-        it('Should return true with list with an item with same name', () => {
-            const todoList = new ToDoListModel();
+        it('Should return true with list with an item with same name', async () => {
+            const connection = await DatabaseUtils.getConnection();
+            const toDoListService = new ToDoListServiceImpl(connection);
             const item = new ItemModel({
-                name: "Item 1",
-                content: "Tu dois faire ça"
+                id: 0,
+                name: "Devoirs",
+                content: "yop",
+                dateHourAdd: new Date(),
+                toDoList: 2
             });
-            todoList.list.push({
-                name: "Item 1",
-                content: "Tu dois faire ça",
-                dateHourAdd: new Date(2000, 8, 14)
-            });
-            expect(toDoListService.nameAlreadyExist(item, todoList)).toEqual(true);
+            expect(await toDoListService.nameAlreadyExist(item.name, item.toDoList)).toEqual(true);
         });
-        it('Should return false with list with not an item with same name', () => {
-            const todoList = new ToDoListModel();
+        it('Should return false with list with not an item with same name', async () => {
+            const connection = await DatabaseUtils.getConnection();
+            const toDoListService = new ToDoListServiceImpl(connection);
             const item = new ItemModel({
-                name: "Item 1",
-                content: "Tu dois faire ça"
+                id: 0,
+                name: "Mes devoirs",
+                content: "yop",
+                dateHourAdd: new Date(),
+                toDoList: 2
             });
-            todoList.list.push({
-                name: "Je suis un item",
-                content: "Tu dois faire ça",
-                dateHourAdd: new Date(2000, 8, 14)
-            });
-            expect(toDoListService.nameAlreadyExist(item, todoList)).toEqual(false);
+            expect(await toDoListService.nameAlreadyExist(item.name, item.toDoList)).toEqual(false);
         })
     });
-})
+});

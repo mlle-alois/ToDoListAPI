@@ -17,23 +17,21 @@ export class ToDoListServiceImpl implements ToDoListService {
         this.connection = connection;
         this.toDoListController = new ToDoListController(this.connection);
         this.emailSenderService = new EmailSenderServiceImpl();
-        this.userService = new UserServiceImpl();
+        this.userService = new UserServiceImpl(connection);
     }
 
     async createToDoList(options: ToDoListModel): Promise<ToDoListModel | null> {
-        //TODO activer avec le service de halisia
-        /*const user = await this.userService.getUserById(options.utilisateur);
+        const user = await this.userService.getUserById(options.utilisateur);
         if (user === null)
-            return null;*/
+            return null;
 
         return this.toDoListController.createToDoList(options);
     }
 
     async updateToDoList(options: ToDoListModel): Promise<ToDoListModel | null> {
-        //TODO activer avec le service de halisia
-        /*const user = await this.userService.getUserById(options.utilisateur);
+        const user = await this.userService.getUserById(options.utilisateur);
         if (user === null)
-            return null;*/
+            return null;
         return await this.toDoListController.updateToDoList(options);
     }
 
