@@ -1,4 +1,5 @@
 
+import {Connection} from "mysql2/promise";
 import {ToDoListModel, UserModel} from "../../../models";
 import {UserServiceImpl} from "../user-service-impl";
 
@@ -17,7 +18,8 @@ describe('User test', () => {
         let validBirthDate13yo = new Date();
         validBirthDate13yo.setFullYear(validBirthDate13yo.getFullYear()-13);
 
-        const userService = new UserServiceImpl();
+        const userService = new UserServiceImpl(connection);
+        
 
         let user = new UserModel({
             id:0,
