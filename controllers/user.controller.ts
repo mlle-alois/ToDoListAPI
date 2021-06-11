@@ -1,5 +1,5 @@
 import { UserModel } from "../models";
-import { Connection, ResultSetHeader, RowDataPacket } from "mysql2/promise";
+import { Connection, RowDataPacket } from "mysql2/promise";
 
 export class UserController {
     private connection: Connection;

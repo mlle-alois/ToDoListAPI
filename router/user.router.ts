@@ -1,8 +1,5 @@
 import express from "express";
-import { endianness } from "os";
-import { UserController } from "../controllers/user.controller";
-import { DatabaseUtils } from "../database/database-local";
-import { UserModel } from "../models";
+import { DatabaseUtils } from "../database/database";
 import { UserServiceImpl } from "../services/impl/user-service-impl";
 
 const userRouter = express.Router();
@@ -17,7 +14,7 @@ userRouter.post("/", async function (req, res) {
   const connection = await DatabaseUtils.getConnection();
   const userService = new UserServiceImpl(connection);
   const user = await userService.createUser({
-    id: 0,
+    id:1,
     name: name,
     firstname: firstname,
     email: email,
