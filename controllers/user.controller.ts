@@ -46,7 +46,7 @@ export class UserController {
                                                                  password,
                                                                  birthdate
                                                                  )
-                                           VALUES (?, ?, ?, ?, ?)`, [
+                                           VALUES (?, ?, ?, ?, ?)`, [                              
                 options.name,
                 options.firstname,
                 options.email,

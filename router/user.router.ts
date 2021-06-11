@@ -5,6 +5,7 @@ import { UserServiceImpl } from "../services/impl/user-service-impl";
 const userRouter = express.Router();
 
 userRouter.post("/", async function (req, res) {
+  const id = req.body.id;
   const name = req.body.name;
   const firstname = req.body.firstname;
   const email = req.body.email;
@@ -14,7 +15,7 @@ userRouter.post("/", async function (req, res) {
   const connection = await DatabaseUtils.getConnection();
   const userService = new UserServiceImpl(connection);
   const user = await userService.createUser({
-    id:1,
+    id:0,
     name: name,
     firstname: firstname,
     email: email,
@@ -22,7 +23,7 @@ userRouter.post("/", async function (req, res) {
     birthdate: birthdate
   });
 
-  console.log(user);
+  console.log(id,name,firstname,email,password,birthdate);
 
   if (user !== null) {
     res.status(201);
