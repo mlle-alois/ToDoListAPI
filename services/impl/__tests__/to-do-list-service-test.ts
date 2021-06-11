@@ -3,6 +3,33 @@ import {ToDoListServiceImpl} from "../to-do-list-service-impl";
 import {DatabaseUtils} from "../../../database/database-tests";
 
 describe('ToDoListService test', () => {
+    describe('Test updateToDoList function', () => {
+        it('Should return null with not existing user', async () => {
+            const connection = await DatabaseUtils.getConnection();
+            const toDoListService = new ToDoListServiceImpl(connection);
+            const todolist = new ToDoListModel({
+                id: 0,
+                name: "Ma ToDoList",
+                description: "bonjour",
+                utilisateur: 1000000
+            });
+            expect(await toDoListService.updateToDoList(todolist)).toEqual(null);
+        });
+        it('Should return null with not existing user', async () => {
+            const connection = await DatabaseUtils.getConnection();
+            const toDoListService = new ToDoListServiceImpl(connection);
+            const todolist = new ToDoListModel({
+                id: 1,
+                name: "Ma ToDoList",
+                description: "bonjour",
+                utilisateur: 6
+            });
+            const updatedToDoList = await toDoListService.updateToDoList(todolist);
+            expect(updatedToDoList?.name).toEqual("Ma ToDoList");
+            expect(updatedToDoList?.description).toEqual("bonjour");
+            expect(updatedToDoList?.utilisateur).toEqual(6);
+        });
+    });
     describe('Test add function', () => {
         it('Should return false with full list', async () => {
             const connection = await DatabaseUtils.getConnection();
@@ -82,24 +109,11 @@ describe('ToDoListService test', () => {
             const toDoListService = new ToDoListServiceImpl(connection);
             expect(await toDoListService.waitingTimeIsOver(3)).toEqual(true);
         });
-        /*it('Should return true with not empty list but wait enough', () => {
-            const todoList = new ToDoListModel();
-            todoList.list.push({
-                name: "Item 1",
-                content: "Tu dois faire ça",
-                dateHourAdd: new Date(2000, 8, 14)
-            });
-            expect(toDoListService.waitingTimeIsOver(todoList)).toEqual(true);
+        it('Should return true with not empty list but wait enough', async () => {
+            const connection = await DatabaseUtils.getConnection();
+            const toDoListService = new ToDoListServiceImpl(connection);
+            expect(await toDoListService.waitingTimeIsOver(2)).toEqual(true);
         });
-        it('Should return false with not empty list but not wait enough', async () => {
-            const todoList = new ToDoListModel();
-            todoList.list.push({
-                name: "Item 1",
-                content: "Tu dois faire ça",
-                dateHourAdd: new Date()
-            });
-            expect(toDoListService.waitingTimeIsOver(todoList)).toEqual(false);
-        });*/
     });
 
     describe('Test nameAlreadyExist function', () => {
