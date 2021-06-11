@@ -67,10 +67,10 @@ export class ToDoListServiceImpl implements ToDoListService {
         return true;
     }
 
-    async waitingTimeIsOver(toDoListId: number): Promise<boolean> {
+    async waitingTimeIsOver(toDoListId: number): Promise<boolean | null> {
         const toDoList = await this.toDoListController.getToDoListById(toDoListId);
         if (toDoList === null) {
-            return false;
+            return null;
         }
         const list = await this.toDoListController.getToDoListItemsById(toDoListId);
         if (list === null)
@@ -80,10 +80,10 @@ export class ToDoListServiceImpl implements ToDoListService {
         return !(toDoList.list.length > 0 && moment().diff(toDoList.list[toDoList.list.length - 1].dateHourAdd, 'minutes') < 30);
     }
 
-    async nameAlreadyExist(itemName: string, toDoListId: number): Promise<boolean> {
+    async nameAlreadyExist(itemName: string, toDoListId: number): Promise<boolean | null> {
         const toDoList = await this.toDoListController.getToDoListById(toDoListId);
         if (toDoList === null) {
-            return false;
+            return null;
         }
         const list = await this.toDoListController.getToDoListItemsById(toDoListId);
         if (list === null)

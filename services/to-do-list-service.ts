@@ -7,7 +7,7 @@ export interface ToDoListService {
 
     add(item: ItemModel): Promise<boolean>;
 
-    waitingTimeIsOver(toDoListId: number): Promise<boolean>;
+    waitingTimeIsOver(toDoListId: number): Promise<boolean | null>;
 
-    nameAlreadyExist(itemName: string, toDoListId: number): Promise<boolean>;
+    nameAlreadyExist(itemName: string, toDoListId: number): Promise<boolean | null>;
 }

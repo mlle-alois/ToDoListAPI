@@ -79,7 +79,10 @@ toDoListRouter.get("/timeIsOverForTodoList/:id", async function (req, res) {
 
     const waitingTimeIsOver = await toDoListService.waitingTimeIsOver(Number.parseInt(id));
 
-    res.status(201).end(waitingTimeIsOver + "");
+    if(waitingTimeIsOver !== null)
+        res.status(201).end(waitingTimeIsOver + "");
+    else
+        res.status(401);
 });
 
 /**
@@ -97,7 +100,10 @@ toDoListRouter.get("/nameAlreadyExistInToDoList/:id", async function (req, res) 
 
     const nameAlreadyExist = await toDoListService.nameAlreadyExist(name, Number.parseInt(id));
 
-    res.status(201).end(nameAlreadyExist + "");
+    if(nameAlreadyExist !== null)
+        res.status(201).end(nameAlreadyExist + "");
+    else
+        res.status(401);
 });
 
 export {
