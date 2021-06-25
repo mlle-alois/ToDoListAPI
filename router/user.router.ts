@@ -1,5 +1,5 @@
 import express from "express";
-import { DatabaseUtils } from "../database/database";
+import { DatabaseUtils } from "../database/database-tests";
 import { UserServiceImpl } from "../services/impl/user-service-impl";
 
 const userRouter = express.Router();
@@ -29,7 +29,7 @@ userRouter.post("/", async function (req, res) {
     res.status(201);
     res.json(user);
   } else {
-    res.status(500).end("La création n'a pas pu aboutir");
+    res.status(500).end("Veuillez renseigner les informations nécessaires");
   }
 });
 
@@ -43,7 +43,7 @@ userRouter.get("/isValid/:id", async function (req, res) {
     res.status(200);
     res.json(isValid).end();
   } else {
-    res.status(400).end("L'utilisateur renseigné est inconnu.");
+    res.status(404).end("L'utilisateur renseigné est inconnu.");
   }
 });
 
